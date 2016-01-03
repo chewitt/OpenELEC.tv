@@ -1,12 +1,11 @@
-diff -Naur atvclient-0.1/src/atvclient.cpp atvclient-0.1.patch/src/atvclient.cpp
---- atvclient-0.1/src/atvclient.cpp	2010-10-09 15:44:27.000000000 +0200
-+++ atvclient-0.1.patch/src/atvclient.cpp	2010-10-09 16:01:29.774444638 +0200
-@@ -161,7 +161,7 @@
+--- a/src/atvclient.cpp	2015-08-25 22:52:31.730703980 +0400
++++ b/src/atvclient.cpp	2015-08-25 22:54:35.656806402 +0400
+@@ -172,7 +172,7 @@
  static CPacketNOTIFICATION remote_unpaired("Remote unpaired", "You can now control XBMC with any Apple remote.", NULL, NULL);
  static CPacketNOTIFICATION remote_pair_failed("Remote already paired", "This AppleTV was paired to another remote. To unpair, hold down menu and rewind for 6 seconds.", NULL, NULL);
  
 -const char* remoteIdFile = "/etc/atvremoteid";
 +const char* remoteIdFile = "/storage/.cache/atvremoteid";
- static int pairedRemoteId = 0; 
+ static int pairedRemoteId = 0;
  
- /* figure out kernel name corresponding to usb device */
+ // new globals to support NEC mode
