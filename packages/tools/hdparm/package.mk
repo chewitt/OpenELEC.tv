@@ -33,3 +33,5 @@ PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
 PKG_MAKE_OPTS_TARGET="binprefix=/usr sbindir=/usr/bin"
+
+#export LDFLAGS="$CFLAGS $LDFLAGS -fwhole-program"
