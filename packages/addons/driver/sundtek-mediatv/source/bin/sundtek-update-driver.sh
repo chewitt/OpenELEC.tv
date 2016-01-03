@@ -61,6 +61,8 @@ fi
 ARCH=$(sed -n 's|.*\.\([^-]*\)-.*|\1|p' /etc/release | tr -d '\n')
 if [ "$ARCH" = "x86_64" ]; then
   INSTALLER_URL="http://sundtek.de/media/netinst/64bit/installer.tar.gz"
+elif [ "$ARCH" = "i386" ]; then
+  INSTALLER_URL="http://sundtek.de/media/netinst/32bit/installer.tar.gz"
 elif [ "$ARCH" = "arm" ]; then
   INSTALLER_URL="http://sundtek.de/media/netinst/armsysvhf/installer.tar.gz"
 else
