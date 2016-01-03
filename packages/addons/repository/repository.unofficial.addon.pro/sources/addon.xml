@@ -6,9 +6,9 @@
         <extension point="xbmc.addon.repository"
                 name="OpenELEC Add-ons (unofficial)">
                 <dir minversion="15.0.0">
-                    <info>http://unofficial.addon.pro/addons/6.0/@PROJECT@/@ARCH@/addons.xml</info>
-                    <checksum>http://unofficial.addon.pro/addons/6.0/@PROJECT@/@ARCH@/addons.xml.md5</checksum>
-                    <datadir zip="true">http://unofficial.addon.pro/addons/6.0/@PROJECT@/@ARCH@</datadir>
+                    <info>http://chewitt.openelec.tv/unofficial/6.0/@PROJECT@/@ARCH@/addons.xml</info>
+                    <checksum>http://chewitt.openelec.tv/unofficial/6.0/@PROJECT@/@ARCH@/addons.xml.md5</checksum>
+                    <datadir zip="true">http://chewitt.openelec.tv/unofficial/6.0/@PROJECT@/@ARCH@</datadir>
                 </dir>
         </extension>
         <extension point="xbmc.addon.metadata">
