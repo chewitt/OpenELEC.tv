@@ -360,6 +360,23 @@
     umount /sysroot
   }
 
+  hfsdiskprep() {
+    for DEVICE in $(/bin/busybox blkid /dev/sd* | sed -e "s,\",,g"| grep $boot); do
+      for device in $(/bin/busybox blkid $DEVICE); do
+        case $device in
+          TYPE=*)
+            FS_TYPE=${device#TYPE=}
+            ;;
+        esac
+      done
+
+      if [ "$FS_TYPE" = "\"hfs\"" -o "$FS_TYPE" = "\"hfsplus\"" ]; then
+        progress "check filesystem $DEVICE [$FS_TYPE]..."
+        /bin/fsck_hfs -r -y $DEVICE >&$SILENT_OUT 2>&1
+      fi
+    done
+  }
+
   load_modules() {
     progress "Loading kernel modules"
 
@@ -457,7 +474,13 @@
   check_disks() {
     if [ "$RUN_FSCK" = "yes" -a -n "$RUN_FSCK_DISKS" ]; then
       progress "Checking disk(s): $RUN_FSCK_DISKS"
-        /sbin/fsck -T -M -p -a $RUN_FSCK_DISKS > /dev/null 2>&1
+
+        if [ -x /bin/fsck_hfs ]; then
+          # deal with hfs partitions
+          hfsdiskprep
+        fi
+
+      /sbin/fsck -T -M -p -a $RUN_FSCK_DISKS > /dev/null 2>&1
         FSCK_RET="$?"
 
         # FSCK_RET is the bit-wise OR of the exit codes for each filesystem that is checked.
@@ -545,8 +568,13 @@
   check_update() {
     progress "Checking for updates"
 
-    UPDATE_TAR=`ls -1 "$UPDATE_DIR"/*.tar 2>/dev/null | head -n 1`
-    if [ -f "$UPDATE_DIR/$UPDATE_KERNEL" -a -f "$UPDATE_DIR/$UPDATE_SYSTEM" -o -f "$UPDATE_TAR" ] ; then
+    # check for ATV1 mach-o-kernel
+    if [ -f "/flash/com.apple.Boot.plist" ] && [ -f "/flash/boot.efi" ]; then
+      UPDATE_KERNEL="MACH_KERNEL"
+    fi
+
+    UPDATE_TAR=`ls -1 "$UPDATE_DIR"/*.tar* 2>/dev/null | head -n 1`
+    if [ -f "$UPDATE_DIR/$UPDATE_KERNEL" ] && [ -f "$UPDATE_DIR/$UPDATE_SYSTEM" ] || [ -f "$UPDATE_TAR" ] ; then
       if [ "$UPDATE_DISABLED" = "yes" ] ; then
         rm -rf $UPDATE_DIR/[0-9a-zA-Z]* &>/dev/null
         echo "Updating not supported on netboot. normal startup in 10s..."
@@ -557,14 +585,14 @@
 
       # check for .tar
       if [ -f "$UPDATE_TAR" ] ; then
-        echo "Found new .tar archive. extracting..."
         mkdir -p $UPDATE_DIR/.tmp &>/dev/null
+        echo "Found update archive. Extracting..."
         tar -xf "$UPDATE_TAR" -C $UPDATE_DIR/.tmp &>/dev/null
         mv $UPDATE_DIR/.tmp/*/target/* $UPDATE_DIR &>/dev/null
         rm -f "$UPDATE_TAR" &>/dev/null
         rm -rf $UPDATE_DIR/.tmp &>/dev/null
         sync
-        if [ ! -f "$UPDATE_DIR/$UPDATE_KERNEL" -o ! -f "$UPDATE_DIR/$UPDATE_SYSTEM" ] ; then
+        if [ ! -f "$UPDATE_DIR/$UPDATE_KERNEL" ] || [ ! -f "$UPDATE_DIR/$UPDATE_SYSTEM" ] ; then
           echo "missing ${UPDATE_KERNEL} or ${UPDATE_SYSTEM}... normal startup in 10s"
           sync
           usleep 10000000
