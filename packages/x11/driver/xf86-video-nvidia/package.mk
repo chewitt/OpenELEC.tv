@@ -45,14 +45,12 @@ make_target() {
 
   cd kernel
     make module CC=$CC SYSSRC=$(kernel_path) SYSOUT=$(kernel_path)
-    $STRIP --strip-debug nvidia.ko
   cd ..
 }
 
 makeinstall_target() {
   mkdir -p $INSTALL/$XORG_PATH_MODULES/drivers
-    cp -P nvidia_drv.so $INSTALL/$XORG_PATH_MODULES/drivers/nvidia-main_drv.so
-    ln -sf /var/lib/nvidia_drv.so $INSTALL/$XORG_PATH_MODULES/drivers/nvidia_drv.so
+    cp -P nvidia_drv.so $INSTALL/$XORG_PATH_MODULES/drivers
 
   mkdir -p $INSTALL/$XORG_PATH_MODULES/extensions
   # rename to not conflicting with Mesa libGL.so
@@ -64,25 +62,19 @@ makeinstall_target() {
   mkdir -p $INSTALL/usr/lib
     cp -P libnvidia-glcore.so.$PKG_VERSION $INSTALL/usr/lib
     cp -P libnvidia-ml.so.$PKG_VERSION $INSTALL/usr/lib
-      ln -sf /var/lib/libnvidia-ml.so.1 $INSTALL/usr/lib/libnvidia-ml.so.1
+      ln -sf libnvidia-ml.so.$PKG_VERSION $INSTALL/usr/lib/libnvidia-ml.so.1
     cp -P tls/libnvidia-tls.so.$PKG_VERSION $INSTALL/usr/lib
   # rename to not conflicting with Mesa libGL.so
     cp -P libGL.so* $INSTALL/usr/lib/libGL_nvidia.so.1
 
   mkdir -p $INSTALL/lib/modules/$(get_module_dir)/nvidia
-    ln -sf /var/lib/nvidia.ko $INSTALL/lib/modules/$(get_module_dir)/nvidia/nvidia.ko
-
-  mkdir -p $INSTALL/usr/lib/nvidia
-    cp kernel/nvidia.ko $INSTALL/usr/lib/nvidia
+    cp kernel/nvidia.ko $INSTALL/lib/modules/$(get_module_dir)/nvidia
 
   mkdir -p $INSTALL/usr/bin
-    ln -s /var/lib/nvidia-smi $INSTALL/usr/bin/nvidia-smi
-    cp nvidia-smi $INSTALL/usr/bin/nvidia-main-smi
-    ln -s /var/lib/nvidia-xconfig $INSTALL/usr/bin/nvidia-xconfig
-    cp nvidia-xconfig $INSTALL/usr/bin/nvidia-main-xconfig
+    cp nvidia-smi $INSTALL/usr/bin
+    cp nvidia-xconfig $INSTALL/usr/bin
 
   mkdir -p $INSTALL/usr/lib/vdpau
-    cp libvdpau_nvidia.so* $INSTALL/usr/lib/vdpau/libvdpau_nvidia-main.so.1
-    ln -sf /var/lib/libvdpau_nvidia.so $INSTALL/usr/lib/vdpau/libvdpau_nvidia.so
-    ln -sf /var/lib/libvdpau_nvidia.so.1 $INSTALL/usr/lib/vdpau/libvdpau_nvidia.so.1
+    cp libvdpau_nvidia.so* $INSTALL/usr/lib/vdpau/libvdpau_nvidia.so.1
+    ln -sf libvdpau_nvidia.so.1 $INSTALL/usr/lib/vdpau/libvdpau_nvidia.so
 }
