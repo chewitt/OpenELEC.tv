@@ -45,6 +45,7 @@ make_target() {
 
   cd kernel
     make module CC=$CC SYSSRC=$(kernel_path) SYSOUT=$(kernel_path)
+    $STRIP --strip-debug nvidia.ko
   cd ..
 }
 
