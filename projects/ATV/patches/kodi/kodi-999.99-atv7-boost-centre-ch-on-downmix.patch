@@ -1,11 +1,3 @@
-commit a509bdf1ed001423cad530c2f230937825ff2254
-Author: WRXTASY <kodi@Ubuntu.12.04.5>
-Date:   Tue Aug 18 09:40:19 2015 +0800
-
-    Boost Center Audio Channel on Downmixing
-
-diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index faf423c..cf123fe 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
 @@ -16602,6 +16602,21 @@ msgstr ""
@@ -30,8 +22,6 @@ index faf423c..cf123fe 100644
  #: system/settings/rbp.xml
  msgctxt "#38010"
  msgid "GPU accelerated"
-diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 3ef33e0..44a9036 100644
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -2578,6 +2578,18 @@
@@ -53,8 +43,6 @@ index 3ef33e0..44a9036 100644
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
-diff --git a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEResampleFFMPEG.cpp b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEResampleFFMPEG.cpp
-index e4ddf9e..34d0152 100644
 --- a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEResampleFFMPEG.cpp
 +++ b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAEResampleFFMPEG.cpp
 @@ -20,6 +20,7 @@
@@ -69,7 +57,7 @@ index e4ddf9e..34d0152 100644
    {
       av_opt_set_double(m_pContext, "rematrix_maxval", 1.0, 0);
    }
-+  int boost_center = CSettings::Get().GetInt("audiooutput.boostcenter");
++  int boost_center = CSettings::GetInstance().GetInt("audiooutput.boostcenter");
 +  if (boost_center)
 +  {
 +    float gain = pow(10.0f, ((float)(-3 + boost_center))/20.0f);
@@ -78,3 +66,4 @@ index e4ddf9e..34d0152 100644
  
    if (remapLayout)
    {
+

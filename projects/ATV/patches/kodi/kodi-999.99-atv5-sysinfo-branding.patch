@@ -1,11 +1,12 @@
---- a/xbmc/windows/GUIWindowSystemInfo.cpp	2015-07-13 11:19:18.000000000 +0400
-+++ b/xbmc/windows/GUIWindowSystemInfo.cpp	2015-07-25 09:50:37.621917837 +0400
-@@ -56,7 +56,7 @@
-   case GUI_MSG_WINDOW_INIT:
+--- a/xbmc/windows/GUIWindowSystemInfo.cpp	2016-01-18 10:47:40.946673609 +0400
++++ b/xbmc/windows/GUIWindowSystemInfo.cpp	2016-01-18 11:22:57.376833638 +0400
+@@ -57,7 +57,7 @@
+     case GUI_MSG_WINDOW_INIT:
      {
        CGUIWindow::OnMessage(message);
--      SET_CONTROL_LABEL(52, CSysInfo::GetAppName() + " " + g_infoManager.GetLabel(SYSTEM_BUILD_VERSION).c_str() +
-+      SET_CONTROL_LABEL(52, "AppleTV running " + CSysInfo::GetAppName() + " " + g_infoManager.GetLabel(SYSTEM_BUILD_VERSION).c_str() +
-                             " (Compiled: " + g_infoManager.GetLabel(SYSTEM_BUILD_DATE).c_str() +")");
-       CONTROL_ENABLE_ON_CONDITION(CONTROL_BT_PVR,
-                                   PVR::CPVRManager::Get().IsStarted());
+-      SET_CONTROL_LABEL(52, CSysInfo::GetAppName() + " " + CSysInfo::GetVersion());
++      SET_CONTROL_LABEL(52, CSysInfo::GetAppName() + " " + CSysInfo::GetVersion() + " - built for AppleTV");
+       SET_CONTROL_LABEL(53, CSysInfo::GetBuildDate());
+       CONTROL_ENABLE_ON_CONDITION(CONTROL_BT_PVR, PVR::CPVRManager::GetInstance().IsStarted());
+       return true;
+
