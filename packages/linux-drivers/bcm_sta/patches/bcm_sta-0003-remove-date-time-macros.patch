@@ -27,7 +27,7 @@
  
  #ifdef BCMDBG
 -	printf(" (Compiled in " SRCBASE " at " __TIME__ " on " __DATE__ ")");
-+	printf(" (Compiled in " SRCBASE ");
++	printf(" (Compiled in " SRCBASE ")");
  #endif 
  	printf("\n");
  
@@ -41,4 +41,3 @@
  }
  
  #if defined(BCMDBG)
-
