@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="glibc"
-PKG_VERSION="2.22"
+PKG_VERSION="2.23"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -112,6 +112,7 @@ libc_cv_forced_unwind=yes
 libc_cv_c_cleanup=yes
 libc_cv_gnu89_inline=yes
 libc_cv_ssp=no
+libc_cv_ssp_strong=no
 libc_cv_ctors_header=yes
 libc_cv_slibdir=/lib
 EOF

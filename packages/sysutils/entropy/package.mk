@@ -16,25 +16,35 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="libinput"
-PKG_VERSION="1.1.8"
+PKG_NAME="entropy"
+PKG_VERSION="0"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.freedesktop.org/wiki/Software/libinput/"
-PKG_URL="http://www.freedesktop.org/software/libinput/$PKG_NAME-$PKG_VERSION.tar.xz"
-PKG_DEPENDS_TARGET="toolchain libevdev mtdev"
+PKG_SITE=""
+PKG_URL=""
+PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
-PKG_SECTION="wayland"
-PKG_SHORTDESC="libinput is a library to handle input devices in Wayland compositors and to provide a generic X.Org input driver."
-PKG_LONGDESC="libinput is a library to handle input devices in Wayland compositors and to provide a generic X.Org input driver."
+PKG_SECTION="system"
+PKG_SHORTDESC="A simple way to add entropy at boot"
+PKG_LONGDESC="A simple way to add entropy at boot"
 
 PKG_IS_ADDON="no"
-PKG_AUTORECONF="yes"
+PKG_AUTORECONF="no"
 
-PKG_CONFIGURE_OPTS_TARGET="--with-sysroot=$SYSROOT_PREFIX \
-                           --enable-shared \
-                           --disable-static \
-                           --disable-documentation \
-                           --disable-event-gui \
-                           --disable-tests"
+make_target(){
+  :
+}
+
+makeinstall_target() {
+  mkdir -p $INSTALL/usr/lib/entropy
+    cp add-entropy $INSTALL/usr/lib/entropy
+    cp add-random-at-shutdown $INSTALL/usr/lib/entropy
+
+  chmod +x $INSTALL/usr/lib/entropy/*
+}
+
+post_install() {
+  enable_service add-entropy.service
+  enable_service add-random-at-shutdown.service
+}
