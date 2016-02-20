@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
-#      Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
+#      Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
 #
 #  OpenELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,44 +16,35 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="timezone-data"
-PKG_VERSION="2016a"
+PKG_NAME="entropy"
+PKG_VERSION="0"
 PKG_REV="1"
 PKG_ARCH="any"
-PKG_LICENSE="Public Domain"
-PKG_SITE="http://www.iana.org/time-zones"
-# this package actually contains both packages tzcode and tzdate in a single package
-# duplicate files are the same files
-PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_LICENSE="GPL"
+PKG_SITE=""
+PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
 PKG_SECTION="system"
-PKG_SHORTDESC="timezone-data"
-PKG_LONGDESC="timezone-data"
+PKG_SHORTDESC="A simple way to add entropy at boot"
+PKG_LONGDESC="A simple way to add entropy at boot"
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
-make_target() {
-  setup_toolchain host
-  make CC="$HOST_CC" CFLAGS="$HOST_CFLAGS"
+make_target(){
+  :
 }
 
 makeinstall_target() {
-  make TOPDIR="./.install_pkg" install
-}
+  mkdir -p $INSTALL/usr/lib/entropy
+    cp add-entropy $INSTALL/usr/lib/entropy
+    cp add-random-at-shutdown $INSTALL/usr/lib/entropy
 
-post_makeinstall_target() {
-  mkdir -p $INSTALL/usr/share/zoneinfo
-    mv $INSTALL/etc/zoneinfo/* $INSTALL/usr/share/zoneinfo
-
-  rm -rf $INSTALL/man
-  rm -rf $INSTALL/etc
-
-  mkdir -p $INSTALL/etc
-    ln -sf /var/run/localtime $INSTALL/etc/localtime
+  chmod +x $INSTALL/usr/lib/entropy/*
 }
 
 post_install() {
-  enable_service tz-data.service
+  enable_service add-entropy.service
+  enable_service add-random-at-shutdown.service
 }
