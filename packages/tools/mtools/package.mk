@@ -16,26 +16,25 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="xf86-video-amdgpu"
-PKG_VERSION="1.0.1"
+PKG_NAME="mtools"
+PKG_VERSION="4.0.18"
 PKG_REV="1"
-PKG_ARCH="x86_64"
-PKG_LICENSE="OSS"
-PKG_SITE="http://www.x.org/"
-PKG_URL="http://xorg.freedesktop.org/archive/individual/driver/$PKG_NAME-$PKG_VERSION.tar.bz2"
-PKG_DEPENDS_TARGET="toolchain xorg-server"
+PKG_ARCH="any"
+PKG_LICENSE="GPL"
+PKG_SITE="http://www.gnu.org/software/mtools/"
+PKG_URL="ftp://ftp.gnu.org/gnu/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_DEPENDS_HOST=""
 PKG_PRIORITY="optional"
-PKG_SECTION="x11/driver"
-PKG_SHORTDESC="xf86-video-amdgpu - AMD Radeon video driver for the Xorg X server"
-PKG_LONGDESC="AMD Xorg video driver"
-
+PKG_SECTION="tools"
+PKG_SHORTDESC="mtools: A collection of utilities to access MS-DOS disks"
+PKG_LONGDESC="mtools: A collection of utilities to access MS-DOS disks"
 PKG_IS_ADDON="no"
+PKG_AUTORECONF="no"
 PKG_AUTORECONF="yes"
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-udev \
-                           --enable-glamor \
-                           --with-xorg-module-dir=$XORG_PATH_MODULES"
+makeinstall_host() {
+  $STRIP mtools
 
-post_makeinstall_target() {
-  rm -r $INSTALL/usr/share
+  mkdir -p $ROOT/$TOOLCHAIN/sbin
+  cp -P mtools mformat mcopy mmd $ROOT/$TOOLCHAIN/sbin
 }

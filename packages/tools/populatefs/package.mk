@@ -16,26 +16,28 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="xf86-video-amdgpu"
-PKG_VERSION="1.0.1"
+PKG_NAME="populatefs"
+PKG_VERSION="95cc98b"
 PKG_REV="1"
-PKG_ARCH="x86_64"
-PKG_LICENSE="OSS"
-PKG_SITE="http://www.x.org/"
-PKG_URL="http://xorg.freedesktop.org/archive/individual/driver/$PKG_NAME-$PKG_VERSION.tar.bz2"
-PKG_DEPENDS_TARGET="toolchain xorg-server"
+PKG_ARCH="any"
+PKG_LICENSE="GPL"
+PKG_SITE="https://github.com/oskarirauta/populatefs"
+PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_DEPENDS_HOST="e2fsprogs:host"
 PKG_PRIORITY="optional"
-PKG_SECTION="x11/driver"
-PKG_SHORTDESC="xf86-video-amdgpu - AMD Radeon video driver for the Xorg X server"
-PKG_LONGDESC="AMD Xorg video driver"
-
+PKG_SECTION="tools"
+PKG_SHORTDESC="populatefs: Tool for replacing genext2fs when creating ext4 images"
+PKG_LONGDESC="populatefs: Tool for replacing genext2fs when creating ext4 images"
 PKG_IS_ADDON="no"
-PKG_AUTORECONF="yes"
+PKG_AUTORECONF="no"
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-udev \
-                           --enable-glamor \
-                           --with-xorg-module-dir=$XORG_PATH_MODULES"
+make_host() {
+  make EXTRA_LIBS="-lcom_err -lpthread" CFLAGS="$CFLAGS -fPIC"
+}
 
-post_makeinstall_target() {
-  rm -r $INSTALL/usr/share
+makeinstall_host() {
+  $STRIP src/populatefs
+
+  mkdir -p $ROOT/$TOOLCHAIN/sbin
+  cp src/populatefs $ROOT/$TOOLCHAIN/sbin
 }

@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
 #      Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
@@ -16,26 +17,25 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="xf86-video-amdgpu"
-PKG_VERSION="1.0.1"
-PKG_REV="1"
-PKG_ARCH="x86_64"
-PKG_LICENSE="OSS"
-PKG_SITE="http://www.x.org/"
-PKG_URL="http://xorg.freedesktop.org/archive/individual/driver/$PKG_NAME-$PKG_VERSION.tar.bz2"
-PKG_DEPENDS_TARGET="toolchain xorg-server"
-PKG_PRIORITY="optional"
-PKG_SECTION="x11/driver"
-PKG_SHORTDESC="xf86-video-amdgpu - AMD Radeon video driver for the Xorg X server"
-PKG_LONGDESC="AMD Xorg video driver"
+echo "getting sources..."
+  if [ ! -d populatefs.git ]; then
+    git clone https://github.com/oskarirauta/populatefs.git populatefs.git
+  fi
 
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="yes"
+  cd populatefs.git
+    git pull
+    GIT_REV=$(git log -n1 --format=%h)
+  cd ..
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-udev \
-                           --enable-glamor \
-                           --with-xorg-module-dir=$XORG_PATH_MODULES"
+echo "copying sources..."
+  rm -rf populatefs-$GIT_REV
+  cp -R populatefs.git populatefs-$GIT_REV
 
-post_makeinstall_target() {
-  rm -r $INSTALL/usr/share
-}
+echo "cleaning sources..."
+  rm -rf populatefs-$GIT_REV/.git
+
+echo "packing sources..."
+  tar cvJf populatefs-$GIT_REV.tar.xz populatefs-$GIT_REV
+
+echo "remove temporary sourcedir..."
+  rm -rf populatefs-$GIT_REV
